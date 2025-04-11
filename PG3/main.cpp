@@ -2,8 +2,9 @@
 //main function
 int main() {
 
-
-	return 0;//I—¹
+	printf("ã‚ã„");
+	
+	return 0;//çµ‚äº†
 
 
 }
