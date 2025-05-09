@@ -12,18 +12,8 @@ void setTimeout(void (*callback)(int, int), int diceRoll, int userGuess, int sec
 	callback(diceRoll, userGuess); // コールバック関数を実行
 }
 
-// 結果検査関数
-void checkResult(int diceRoll, int userGuess) {
-    if ((diceRoll % 2 == 0 && userGuess == 2) || (diceRoll % 2 != 0 && userGuess == 1)) {
-        printf("正解！\n");
-    } else {
-        printf("不正解。\n");
-    }
-    printf("サイコロの出目は: %d でした。\n", diceRoll);
-}
-
 // サイコロゲーム関数
-void playDiceGame(Callback callback) {
+void playDiceGame() {
     // 乱数シード
     unsigned int currentTime = time(nullptr);
     srand(currentTime);
@@ -37,6 +27,18 @@ void playDiceGame(Callback callback) {
     int userGuess;
     scanf_s("%d", &userGuess);
 
+    auto checkResultLambda = [](int dice, int guess) {
+        if ((dice % 2 == 0 && guess == 2) || (dice % 2 != 0 && guess == 1)) {
+            printf("正解！\n");
+        } else {
+            printf("不正解。\n");
+        }
+        printf("サイコロの出目は: %d でした。\n", dice);
+        };
+
+    // 関数ポインタにキャストして渡す
+    void (*callback)(int, int) = checkResultLambda;
+
 	// 3秒後に結果を表示するためにコールバック関数を呼び出す
     setTimeout(callback, diceRoll, userGuess, 3000);
 }
@@ -44,7 +46,7 @@ void playDiceGame(Callback callback) {
 // メイン関数
 int main() {
     //  ゲーム開始
-    playDiceGame(checkResult);
+    playDiceGame();
 
     return 0;
 }
