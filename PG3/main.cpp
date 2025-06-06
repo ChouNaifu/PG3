@@ -1,50 +1,56 @@
 #include<stdio.h>
+#define _USE_MATH_DEFINES
+#include<math.h>
 
-// Air Supportクラス（基底クラス）
-class AirSupport {
+// IShapeクラス（抽象クラス・インターフェース）
+class IShape {
 public:
-	// 仮想関数：Close Air Support
-    virtual void CAS() {
-        printf("Air Support Inbound. ETA 3 mikes out.\n");
+    // 純粋仮想関数
+    virtual void Size() = 0;
+    virtual void Draw() = 0;
+};
+
+// Circleクラス（派生クラス）
+class Circle : public IShape {
+private:
+    float r;
+	float size = 0;// 面積を格納する変数
+public:
+    Circle(float radius) : r(radius) {}
+    void Size() override {      
+		size = static_cast<float>(M_PI) * r * r;// 円の面積を計算
+    }
+    void Draw() override {
+		printf("面積：%f\n", size);// 面積を表示
     }
 };
 
-// Apacheクラス（派生クラス）
-class Apache : public AirSupport {
+// Rectangleクラス（派生クラス）
+class Rectangle : public IShape {
+private:
+    float w, h;
+	float size = 0;// 面積を格納する変数
 public:
-    void CAS() override {
-        printf("All Bravo, Kilo 1-1 is inbound hot, danger close.\n");
+    Rectangle(float width, float height) : w(width), h(height) {}
+    void Size() override {
+		size = w * h;// 長方形の面積を計算
     }
-};
-
-// AC130クラス（派生クラス）
-class AC130 : public AirSupport {
-public:
-    void CAS() override {
-        printf("Bravo 6- This is Viper 1-1 on approach, ready for tasking.\n");
-    }
-};
-
-// UAVクラス（派生クラス）
-class UAV : public AirSupport {
-public:
-    void CAS() override {
-        printf("All station be advised. Shadow-1 is on station for close-air, guns hot.\n");
+    void Draw() override {
+		printf("長方形の面積: %f\n\n", size);// 面積を表示
     }
 };
 
 int main() {
     // ポリモーフィズムの例
-    AirSupport* fire[3];
-    fire[0] = new Apache();
-    fire[1] = new AC130();
-    fire[2] = new UAV();
+    IShape* shapes[2];
+    shapes[0] = new Circle(3.0);
+    shapes[1] = new Rectangle(4.0, 5.0);
 
-    // それぞれのCASを出す
-    for (int i = 0; i < 3; i++) {
-        fire[i]->CAS();
-        delete fire[i];
+	// 各形状の面積を計算し、描画する
+    for (int i = 0; i < 2; i++) {
+        shapes[i]->Size();
+        shapes[i]->Draw();
+        delete shapes[i];
     }
-
-    return 0; // 終了
+    return 0;
 }
