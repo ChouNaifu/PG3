@@ -1,50 +1,81 @@
 #include<stdio.h>
+#include<list>
 
-// Air Supportクラス（基底クラス）
-class AirSupport {
-public:
-	// 仮想関数：Close Air Support
-    virtual void CAS() {
-        printf("Air Support Inbound. ETA 3 mikes out.\n");
-    }
+// 駅名をchar配列で定義（英語表記のみ）
+const char* yamanote_1970[][2] = {
+    {"Tabata", "Tabata"},
+    {"Nishi-Nippori", "Nishi-Nippori"}, // 1971年開業
+    {"Nippori", "Nippori"},
+    {"Uguisudani", "Uguisudani"},
+    {"Ueno", "Ueno"},
+    {"Okachimachi", "Okachimachi"},
+    {"Akihabara", "Akihabara"},
+    {"Kanda", "Kanda"},
+    {"Tokyo", "Tokyo"},
+    {"Yurakucho", "Yurakucho"},
+    {"Shimbashi", "Shimbashi"},
+    {"Hamamatsucho", "Hamamatsucho"},
+    {"Tamachi", "Tamachi"},
+    {"Shinagawa", "Shinagawa"},
+    {"Osaki", "Osaki"},
+    {"Gotanda", "Gotanda"},
+    {"Meguro", "Meguro"},
+    {"Ebisu", "Ebisu"},
+    {"Shibuya", "Shibuya"},
+    {"Harajuku", "Harajuku"},
+    {"Yoyogi", "Yoyogi"},
+    {"Shinjuku", "Shinjuku"},
+    {"Shin-Okubo", "Shin-Okubo"},
+    {"Takadanobaba", "Takadanobaba"},
+    {"Mejiro", "Mejiro"},
+    {"Ikebukuro", "Ikebukuro"},
+    {"Otsuka", "Otsuka"},
+    {"Sugamo", "Sugamo"},
+    {"Komagome", "Komagome"},
+    {"Tabata", "Tabata"}
 };
 
-// Apacheクラス（派生クラス）
-class Apache : public AirSupport {
-public:
-    void CAS() override {
-        printf("All Bravo, Kilo 1-1 is inbound hot, danger close.\n");
-    }
-};
+// 2019年: 高輪ゲートウェイ駅(2020年開業)を追加
+const char* takanawa = "Takanawa Gateway";
+const char* nishinippori = "Nishi-Nippori";
 
-// AC130クラス（派生クラス）
-class AC130 : public AirSupport {
-public:
-    void CAS() override {
-        printf("Bravo 6- This is Viper 1-1 on approach, ready for tasking.\n");
+void print_list(std::list<const char*>& lst) {
+    for (std::list<const char*>::iterator it = lst.begin(); it != lst.end(); ++it) {
+        printf("%s\n", *it);
     }
-};
-
-// UAVクラス（派生クラス）
-class UAV : public AirSupport {
-public:
-    void CAS() override {
-        printf("All station be advised. Shadow-1 is on station for close-air, guns hot.\n");
-    }
-};
+    printf("\n");
+}
 
 int main() {
-    // ポリモーフィズムの例
-    AirSupport* fire[3];
-    fire[0] = new Apache();
-    fire[1] = new AC130();
-    fire[2] = new UAV();
-
-    // それぞれのCASを出す
-    for (int i = 0; i < 3; i++) {
-        fire[i]->CAS();
-        delete fire[i];
+    // 1970年
+    printf("【1970年】\n");
+    std::list<const char*> list1970;
+    for (int i = 0; i < 30; ++i) {
+        // 1971年開業の西日暮里駅は1970年には含めない
+        if (i == 1) continue;
+        list1970.push_back(yamanote_1970[i][0]);
     }
+    print_list(list1970);
 
-    return 0; // 終了
+    // 2019年
+    printf("【2019年】\n");
+    std::list<const char*> list2019;
+    for (int i = 0; i < 30; ++i) {
+        list2019.push_back(yamanote_1970[i][0]);
+    }
+    print_list(list2019);
+
+    // 2022年
+    printf("【2022年】\n");
+    std::list<const char*> list2022;
+    for (int i = 0; i < 30; ++i) {
+        // 高輪ゲートウェイ駅を品川と田町の間に挿入
+        list2022.push_back(yamanote_1970[i][0]);
+        if (strcmp(yamanote_1970[i][0], "Tamachi") == 0) {
+            list2022.push_back(takanawa);
+        }
+    }
+    print_list(list2022);
+
+    return 0;
 }
